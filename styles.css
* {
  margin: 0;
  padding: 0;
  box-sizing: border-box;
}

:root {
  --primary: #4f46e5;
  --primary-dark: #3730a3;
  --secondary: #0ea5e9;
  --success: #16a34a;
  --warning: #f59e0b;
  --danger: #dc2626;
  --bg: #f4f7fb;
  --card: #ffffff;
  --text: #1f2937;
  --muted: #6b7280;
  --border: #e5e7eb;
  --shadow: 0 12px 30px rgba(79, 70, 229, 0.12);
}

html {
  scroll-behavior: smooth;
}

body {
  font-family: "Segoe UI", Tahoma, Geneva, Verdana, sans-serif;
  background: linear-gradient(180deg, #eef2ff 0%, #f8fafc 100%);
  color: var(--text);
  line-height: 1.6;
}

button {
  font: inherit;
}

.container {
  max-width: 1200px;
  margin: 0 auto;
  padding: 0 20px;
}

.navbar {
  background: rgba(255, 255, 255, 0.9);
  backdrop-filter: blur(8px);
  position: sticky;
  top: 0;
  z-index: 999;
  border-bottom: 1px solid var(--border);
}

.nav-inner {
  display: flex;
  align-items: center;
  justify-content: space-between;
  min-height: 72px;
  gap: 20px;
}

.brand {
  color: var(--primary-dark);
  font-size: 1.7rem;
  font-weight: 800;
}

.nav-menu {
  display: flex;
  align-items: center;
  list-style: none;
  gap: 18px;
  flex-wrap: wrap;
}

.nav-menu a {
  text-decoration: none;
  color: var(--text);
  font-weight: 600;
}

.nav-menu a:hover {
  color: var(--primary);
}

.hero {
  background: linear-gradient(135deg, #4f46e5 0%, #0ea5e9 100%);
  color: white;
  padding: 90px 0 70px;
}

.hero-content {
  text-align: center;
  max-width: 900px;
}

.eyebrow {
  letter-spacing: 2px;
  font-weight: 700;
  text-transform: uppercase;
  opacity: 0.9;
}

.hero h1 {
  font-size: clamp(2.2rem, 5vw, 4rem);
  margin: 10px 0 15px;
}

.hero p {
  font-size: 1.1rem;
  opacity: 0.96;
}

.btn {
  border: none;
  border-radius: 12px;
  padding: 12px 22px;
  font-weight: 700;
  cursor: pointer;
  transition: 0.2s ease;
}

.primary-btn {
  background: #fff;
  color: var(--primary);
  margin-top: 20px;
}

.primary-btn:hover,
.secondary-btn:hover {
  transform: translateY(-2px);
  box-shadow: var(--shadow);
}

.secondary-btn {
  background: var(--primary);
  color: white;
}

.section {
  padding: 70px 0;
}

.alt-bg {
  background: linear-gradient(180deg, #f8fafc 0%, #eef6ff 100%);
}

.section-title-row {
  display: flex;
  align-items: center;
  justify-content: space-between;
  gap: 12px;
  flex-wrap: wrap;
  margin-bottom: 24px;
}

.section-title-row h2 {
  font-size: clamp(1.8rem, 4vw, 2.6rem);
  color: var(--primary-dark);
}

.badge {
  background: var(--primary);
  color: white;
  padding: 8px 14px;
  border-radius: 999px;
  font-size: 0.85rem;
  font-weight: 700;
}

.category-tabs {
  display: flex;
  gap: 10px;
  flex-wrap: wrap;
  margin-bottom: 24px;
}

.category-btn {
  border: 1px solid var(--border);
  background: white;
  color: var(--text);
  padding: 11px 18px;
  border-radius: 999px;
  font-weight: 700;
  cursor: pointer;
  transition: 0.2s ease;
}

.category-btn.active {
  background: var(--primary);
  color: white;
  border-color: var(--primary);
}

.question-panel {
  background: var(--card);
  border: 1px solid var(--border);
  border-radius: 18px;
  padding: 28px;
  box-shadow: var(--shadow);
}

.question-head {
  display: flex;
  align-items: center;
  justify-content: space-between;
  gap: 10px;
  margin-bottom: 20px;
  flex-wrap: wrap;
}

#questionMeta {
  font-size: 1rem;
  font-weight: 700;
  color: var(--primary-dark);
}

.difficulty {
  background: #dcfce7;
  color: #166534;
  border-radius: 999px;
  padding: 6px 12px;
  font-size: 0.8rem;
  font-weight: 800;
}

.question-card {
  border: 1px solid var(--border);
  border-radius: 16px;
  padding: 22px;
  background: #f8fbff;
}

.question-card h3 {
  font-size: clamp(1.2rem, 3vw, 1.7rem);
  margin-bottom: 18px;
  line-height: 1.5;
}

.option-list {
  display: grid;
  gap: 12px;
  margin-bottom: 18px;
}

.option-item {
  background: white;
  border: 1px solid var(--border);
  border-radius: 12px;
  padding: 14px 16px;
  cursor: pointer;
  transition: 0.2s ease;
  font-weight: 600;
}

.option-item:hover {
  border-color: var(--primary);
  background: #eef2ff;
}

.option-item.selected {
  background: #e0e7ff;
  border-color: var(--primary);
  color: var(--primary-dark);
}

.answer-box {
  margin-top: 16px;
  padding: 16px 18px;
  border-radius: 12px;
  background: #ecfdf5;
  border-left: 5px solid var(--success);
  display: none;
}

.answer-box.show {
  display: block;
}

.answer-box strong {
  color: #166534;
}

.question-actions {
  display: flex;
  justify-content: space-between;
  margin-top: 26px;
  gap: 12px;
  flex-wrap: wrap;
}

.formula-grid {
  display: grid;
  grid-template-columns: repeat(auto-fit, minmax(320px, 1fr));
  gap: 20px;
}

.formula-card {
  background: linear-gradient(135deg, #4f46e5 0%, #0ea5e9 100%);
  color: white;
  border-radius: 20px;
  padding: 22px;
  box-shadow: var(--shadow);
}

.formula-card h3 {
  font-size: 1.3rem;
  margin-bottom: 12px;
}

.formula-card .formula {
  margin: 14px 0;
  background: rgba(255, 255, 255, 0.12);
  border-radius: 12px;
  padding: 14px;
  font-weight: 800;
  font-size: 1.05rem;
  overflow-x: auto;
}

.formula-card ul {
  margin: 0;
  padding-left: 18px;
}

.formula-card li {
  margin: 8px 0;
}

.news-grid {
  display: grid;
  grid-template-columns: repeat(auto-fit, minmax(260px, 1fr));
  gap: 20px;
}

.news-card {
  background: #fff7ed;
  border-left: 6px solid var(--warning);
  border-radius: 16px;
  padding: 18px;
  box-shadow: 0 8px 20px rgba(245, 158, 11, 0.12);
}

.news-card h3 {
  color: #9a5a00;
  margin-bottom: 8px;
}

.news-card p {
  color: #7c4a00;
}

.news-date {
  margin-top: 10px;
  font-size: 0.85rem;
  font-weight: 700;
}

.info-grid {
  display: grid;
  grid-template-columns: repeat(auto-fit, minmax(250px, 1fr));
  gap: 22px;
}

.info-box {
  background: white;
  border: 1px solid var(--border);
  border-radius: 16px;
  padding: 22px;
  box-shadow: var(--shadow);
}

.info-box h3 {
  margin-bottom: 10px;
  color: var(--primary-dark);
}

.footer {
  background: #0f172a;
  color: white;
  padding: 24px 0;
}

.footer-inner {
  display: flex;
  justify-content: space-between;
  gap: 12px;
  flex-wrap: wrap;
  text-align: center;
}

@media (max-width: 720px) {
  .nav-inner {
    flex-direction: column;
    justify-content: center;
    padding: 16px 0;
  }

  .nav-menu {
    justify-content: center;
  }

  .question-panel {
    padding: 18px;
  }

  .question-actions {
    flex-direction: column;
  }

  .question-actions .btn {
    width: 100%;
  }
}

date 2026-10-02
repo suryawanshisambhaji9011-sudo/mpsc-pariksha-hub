@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="mr">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>MPSC परीक्षा हब | 5000+ प्रश्न बँक</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <nav class="navbar">
+      <div class="container nav-inner">
+        <div class="brand">📚 MPSC परीक्षा हब</div>
+        <ul class="nav-menu">
+          <li><a href="#practice">प्रश्न बँक</a></li>
+          <li><a href="#formulas">सूत्र</a></li>
+          <li><a href="#news">बातमी</a></li>
+          <li><a href="#about">माहिती</a></li>
+        </ul>
+      </div>
+    </nav>
+
+    <header class="hero">
+      <div class="container hero-content">
+        <p class="eyebrow">दैनिक अभ्यास | 5000+ प्रश्न</p>
+        <h1>मराठी MPSC आणि स्पर्धा परीक्षा तयारी</h1>
+        <p>
+          सामान्य ज्ञान, इतिहास, विज्ञान, बुद्धिमत्ता, गणित आणि सविस्तर सूत्रांचा
+          स्टडीप्लान.
+        </p>
+        <button class="btn primary-btn" onclick="document.getElementById('practice').scrollIntoView({behavior:'smooth'})">
+          आजचे अभ्यास सुरु करा
+        </button>
+      </div>
+    </header>
+
+    <main>
+      <section id="practice" class="section">
+        <div class="container">
+          <div class="section-title-row">
+            <h2>📝 प्रश्न बँक</h2>
+            <span class="badge" id="totalCount">0 प्रश्न</span>
+          </div>
+
+          <div class="category-tabs" id="categoryTabs"></div>
+
+          <div class="question-panel">
+            <div class="question-head">
+              <span id="questionMeta">प्रश्न 1 / 1</span>
+              <span class="difficulty" id="difficultyBadge">सोपे</span>
+            </div>
+
+            <div id="questionCard" class="question-card"></div>
+
+            <div class="question-actions">
+              <button class="btn secondary-btn" id="prevBtn">⬅ मागील</button>
+              <button class="btn secondary-btn" id="nextBtn">पुढील ➡</button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="formulas" class="section alt-bg">
+        <div class="container">
+          <div class="section-title-row">
+            <h2>📐 गणिताचे महत्त्वाचे सूत्र</h2>
+          </div>
+          <div id="formulaCards" class="formula-grid"></div>
+        </div>
+      </section>
+
+      <section id="news" class="section">
+        <div class="container">
+          <div class="section-title-row">
+            <h2>📰 स्पर्धा परीक्षेची बातमी</h2>
+          </div>
+          <div id="newsCards" class="news-grid"></div>
+        </div>
+      </section>
+
+      <section id="about" class="section alt-bg">
+        <div class="container info-grid">
+          <div class="info-box">
+            <h3>🎯 उद्देश</h3>
+            <p>
+              मराठीत सुलभीकरणासह अधिकाधिक प्रथिने, सोपे सूत्र आणि वारंवार
+              सराव करून परीक्षार्थ्याला वेळ व आत्मविश्वास मिळतो.
+            </p>
+          </div>
+
+          <div class="info-box">
+            <h3>✅ फायदें</h3>
+            <p>
+              प्रॅक्टिसची संख्या जास्त, मुख्य विषयांची पुनरावृत्ती, नोट्स आणि
+              उदाहरणांसह समजलेले गणित यामुळेच परीक्षा तयारी मजबूत होते.
+            </p>
+          </div>
+
+          <div class="info-box">
+            <h3>📘 वापर</h3>
+            <p>
+              दररोज काही प्रश्न सोडवा, सूत्रांचे उदाहरण पाहा आणि पुढील खूप
+              प्रश्नांमध्ये सराव करा. या पद्धतीत वेळ वाचतो आणि आत्मविश्वास वाढतो.
+            </p>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <footer class="footer">
+      <div class="container footer-inner">
+        <p>© 2026 MPSC परीक्षा हब | सर्व हक्क सुरक्षित</p>
+        <p>दैनिक नविन प्रश्न, सूत्र आणि समजावणी</p>
+      </div>
+    </footer>
+
+    <script src="data.js"></script>
+    <script src="app.js"></script>
+  </body>
+</html>
