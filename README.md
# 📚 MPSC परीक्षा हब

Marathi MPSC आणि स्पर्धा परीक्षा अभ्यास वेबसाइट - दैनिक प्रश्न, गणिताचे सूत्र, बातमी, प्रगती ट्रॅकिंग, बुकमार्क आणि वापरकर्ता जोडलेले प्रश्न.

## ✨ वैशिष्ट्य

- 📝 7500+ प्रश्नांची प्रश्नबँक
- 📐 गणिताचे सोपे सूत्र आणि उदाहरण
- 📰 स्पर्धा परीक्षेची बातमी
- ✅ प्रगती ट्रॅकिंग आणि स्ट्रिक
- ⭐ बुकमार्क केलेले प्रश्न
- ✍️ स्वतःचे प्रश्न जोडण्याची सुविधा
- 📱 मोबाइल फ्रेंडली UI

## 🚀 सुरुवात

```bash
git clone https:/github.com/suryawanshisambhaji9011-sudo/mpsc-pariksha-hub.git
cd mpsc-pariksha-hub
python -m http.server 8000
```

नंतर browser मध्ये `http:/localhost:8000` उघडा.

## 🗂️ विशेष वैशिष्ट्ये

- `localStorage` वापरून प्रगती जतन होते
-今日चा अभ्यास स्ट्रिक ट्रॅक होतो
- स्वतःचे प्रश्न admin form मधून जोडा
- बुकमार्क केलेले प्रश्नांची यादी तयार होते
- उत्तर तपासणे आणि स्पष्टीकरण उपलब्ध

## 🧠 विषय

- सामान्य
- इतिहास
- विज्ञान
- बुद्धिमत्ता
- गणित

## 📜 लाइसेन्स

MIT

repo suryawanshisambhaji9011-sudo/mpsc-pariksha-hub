@@ -1,0 +1,382 @@
+const STORAGE_KEY = 'mpscStudyAppData_v1';
+
+const state = {
+  currentCategory: 'general',
+  currentIndex: 0,
+  storage: getStorageData()
+};
+
+function getStorageData() {
+  try {
+    const raw = localStorage.getItem(STORAGE_KEY);
+    if (!raw) {
+      return {
+        customQuestions: { general: [], history: [], science: [], reasoning: [], maths: [] },
+        answers: {},
+        bookmarks: [],
+        stats: {
+          attempts: 0,
+          correct: 0,
+          streak: 1,
+          lastStudyDate: null
+        }
+      };
+    }
+
+    return JSON.parse(raw);
+  } catch (error) {
+    return {
+      customQuestions: { general: [], history: [], science: [], reasoning: [], maths: [] },
+      answers: {},
+      bookmarks: [],
+      stats: {
+        attempts: 0,
+        correct: 0,
+        streak: 1,
+        lastStudyDate: null
+      }
+    };
+  }
+}
+
+function saveStorageData() {
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(state.storage));
+}
+
+function updateDailyStreak() {
+  const today = new Date().toISOString().slice(0, 10);
+  const last = state.storage.stats.lastStudyDate;
+
+  if (!last) {
+    state.storage.stats.lastStudyDate = today;
+    state.storage.stats.streak = 1;
+    return;
+  }
+
+  const lastDate = new Date(last);
+  const todayDate = new Date(today);
+  const diffDays = Math.floor((todayDate - lastDate) / (1000 * 60 * 60 * 24));
+
+  if (diffDays === 0) {
+    return;
+  }
+
+  if (diffDays === 1) {
+    state.storage.stats.streak += 1;
+  } else {
+    state.storage.stats.streak = 1;
+  }
+
+  state.storage.stats.lastStudyDate = today;
+}
+
+function getQuestionSet(category) {
+  const baseQuestions = window.questionLibrary?.[category] || [];
+  const customQuestions = state.storage.customQuestions?.[category] || [];
+  return [...baseQuestions, ...customQuestions];
+}
+
+function getCurrentQuestion() {
+  const list = getQuestionSet(state.currentCategory);
+  return list[state.currentIndex] || null;
+}
+
+function isBookmarked(questionKey) {
+  return state.storage.bookmarks.includes(questionKey);
+}
+
+function getQuestionKey(question) {
+  return `${state.currentCategory}:${question.id}`;
+}
+
+function renderCategoryButtons() {
+  const tabs = document.getElementById('categoryTabs');
+  const categories = [
+    { key: 'general', label: 'सामान्य' },
+    { key: 'history', label: 'इतिहास' },
+    { key: 'science', label: 'विज्ञान' },
+    { key: 'reasoning', label: 'बुद्धिमत्ता' },
+    { key: 'maths', label: 'गणित' }
+  ];
+
+  tabs.innerHTML = categories.map((category) => {
+    const activeClass = state.currentCategory === category.key ? 'active' : '';
+    return `<button class="category-btn ${activeClass}" data-category="${category.key}">${category.label}</button>`;
+  }).join('');
+
+  tabs.querySelectorAll('.category-btn').forEach((btn) => {
+    btn.addEventListener('click', () => {
+      state.currentCategory = btn.dataset.category;
+      state.currentIndex = 0;
+      renderQuestionUI();
+    });
+  });
+}
+
+function renderStats() {
+  const totalAttempts = state.storage.stats.attempts || 0;
+  const correctCount = state.storage.stats.correct || 0;
+  const bookmarksCount = state.storage.bookmarks.length;
+  const streak = state.storage.stats.streak || 1;
+
+  document.getElementById('scoreStat').textContent = `${correctCount}`;
+  document.getElementById('correctStat').textContent = `${correctCount}`;
+  document.getElementById('streakStat').textContent = `${streak}`;
+  document.getElementById('bookmarkStat').textContent = `${bookmarksCount}`;
+}
+
+function renderQuestionUI() {
+  const questions = getQuestionSet(state.currentCategory);
+  const total = questions.length || 0;
+  const current = questions[state.currentIndex] || null;
+  const totalCount = document.getElementById('totalCount');
+  totalCount.textContent = `${total.toLocaleString('en-IN')} प्रश्न`;
+
+  if (!current) {
+    document.getElementById('questionCard').innerHTML = '<p>कोणतेही प्रश्न उपलब्ध नाहीत.</p>';
+    return;
+  }
+
+  const questionMeta = document.getElementById('questionMeta');
+  const difficultyBadge = document.getElementById('difficultyBadge');
+  const questionCard = document.getElementById('questionCard');
+  const questionKey = getQuestionKey(current);
+  const isSelectedBookmarked = isBookmarked(questionKey);
+
+  questionMeta.textContent = `प्रश्न ${state.currentIndex + 1} / ${total}`;
+  difficultyBadge.textContent = current.difficulty || 'सोपे';
+
+  const savedAnswer = state.storage.answers[questionKey];
+  const optionsMarkup = current.options.map((option, index) => {
+    const letter = String.fromCharCode(65 + index);
+    const selectedClass = savedAnswer && savedAnswer.selectedIndex === index ? 'selected' : '';
+    return `
+      <div class="option-item ${selectedClass}" data-index="${index}">
+        ${letter}) ${option}
+      </div>
+    `;
+  }).join('');
+
+  questionCard.innerHTML = `
+    <h3>${current.question}</h3>
+    <div class="option-list">${optionsMarkup}</div>
+    <div class="answer-box ${savedAnswer ? 'show' : ''}" id="answerBox">
+      <strong>योग्य उत्तर:</strong> ${String.fromCharCode(65 + current.correctAnswer)}) ${current.options[current.correctAnswer]}<br>
+      <strong>स्पष्टीकरण:</strong> ${current.explanation}
+    </div>
+  `;
+
+  const bookmarkBtn = document.getElementById('bookmarkBtn');
+  bookmarkBtn.textContent = isSelectedBookmarked ? '★ बुकमार्क केले' : '☆ बुकमार्क';
+
+  const optionItems = questionCard.querySelectorAll('.option-item');
+  optionItems.forEach((item) => {
+    item.addEventListener('click', () => {
+      const selectedIndex = Number(item.dataset.index);
+      const answerBox = document.getElementById('answerBox');
+      const correctIndex = current.correctAnswer;
+
+      state.storage.answers[questionKey] = {
+        selectedIndex,
+        correct: selectedIndex === correctIndex,
+        answeredAt: new Date().toISOString()
+      };
+
+      if (!state.storage.answers[questionKey].correct) {
+        state.storage.stats.attempts = (state.storage.stats.attempts || 0) + 1;
+      } else {
+        state.storage.stats.attempts = (state.storage.stats.attempts || 0) + 1;
+        state.storage.stats.correct = (state.storage.stats.correct || 0) + 1;
+      }
+
+      saveStorageData();
+      renderStats();
+
+      optionItems.forEach((el) => el.classList.remove('selected'));
+      item.classList.add('selected');
+
+      if (selectedIndex === correctIndex) {
+        answerBox.innerHTML = `
+          <strong>बरोबर उत्तर:</strong> ${String.fromCharCode(65 + correctIndex)}) ${current.options[correctIndex]}<br>
+          <strong>स्पष्टीकरण:</strong> ${current.explanation}
+        `;
+      } else {
+        answerBox.innerHTML = `
+          <strong>चुकीचे उत्तर:</strong> ${String.fromCharCode(65 + selectedIndex)}<br>
+          <strong>योग्य उत्तर:</strong> ${String.fromCharCode(65 + correctIndex)}) ${current.options[correctIndex]}<br>
+          <strong>स्पष्टीकरण:</strong> ${current.explanation}
+        `;
+      }
+
+      answerBox.classList.add('show');
+    });
+  });
+
+  document.getElementById('prevBtn').disabled = state.currentIndex === 0;
+  document.getElementById('prevBtn').style.opacity = state.currentIndex === 0 ? '0.5' : '1';
+}
+
+function renderFormulaCards() {
+  const container = document.getElementById('formulaCards');
+  container.innerHTML = window.formulas.map((item) => `
+    <div class="formula-card">
+      <h3>${item.title}</h3>
+      <div class="formula">${item.formula}</div>
+      <ul>
+        ${item.steps.map((step) => `<li>${step}</li>`).join('')}
+      </ul>
+      <p style="margin-top: 14px; font-weight:700;">उदाहरण: ${item.example}</p>
+    </div>
+  `).join('');
+}
+
+function renderNewsCards() {
+  const container = document.getElementById('newsCards');
+  container.innerHTML = window.examNews.map((item) => {
+    const date = new Date(item.date);
+    const formatted = date.toLocaleDateString('mr-IN', { year: 'numeric', month: 'long', day: 'numeric' });
+    return `
+      <div class="news-card">
+        <h3>${item.title}</h3>
+        <p>${item.description}</p>
+        <p class="news-date">📅 ${formatted}</p>
+      </div>
+    `;
+  }).join('');
+}
+
+function toggleBookmark() {
+  const current = getCurrentQuestion();
+  if (!current) return;
+
+  const questionKey = getQuestionKey(current);
+  const exists = state.storage.bookmarks.includes(questionKey);
+
+  if (exists) {
+    state.storage.bookmarks = state.storage.bookmarks.filter((key) => key !== questionKey);
+  } else {
+    state.storage.bookmarks.push(questionKey);
+  }
+
+  saveStorageData();
+  renderStats();
+  renderQuestionUI();
+}
+
+function resetProgress() {
+  if (!window.confirm('तुमची प्रगती साफ करायची आहे का?')) return;
+
+  state.storage = {
+    customQuestions: { general: [], history: [], science: [], reasoning: [], maths: [] },
+    answers: {},
+    bookmarks: [],
+    stats: {
+      attempts: 0,
+      correct: 0,
+      streak: 1,
+      lastStudyDate: new Date().toISOString().slice(0, 10)
+    }
+  };
+
+  saveStorageData();
+  renderStats();
+  renderQuestionUI();
+}
+
+function showAnswer() {
+  const current = getCurrentQuestion();
+  if (!current) return;
+
+  const answerBox = document.getElementById('answerBox');
+  answerBox.innerHTML = `
+    <strong>योग्य उत्तर:</strong> ${String.fromCharCode(65 + current.correctAnswer)}) ${current.options[current.correctAnswer]}<br>
+    <strong>स्पष्टिकरण:</strong> ${current.explanation}
+  `;
+  answerBox.classList.add('show');
+}
+
+function handleCustomQuestionSubmit(event) {
+  event.preventDefault();
+
+  const category = document.getElementById('customCategory').value;
+  const question = document.getElementById('customQuestion').value.trim();
+  const options = [
+    document.getElementById('customOptionA').value.trim(),
+    document.getElementById('customOptionB').value.trim(),
+    document.getElementById('customOptionC').value.trim(),
+    document.getElementById('customOptionD').value.trim()
+  ];
+  const correctAnswer = Number(document.getElementById('customCorrectAnswer').value);
+  const explanation = document.getElementById('customExplanation').value.trim();
+
+  if (!question || options.some((opt) => !opt)) {
+    alert('कृपया सर्व माहिती भरा.');
+    return;
+  }
+
+  const customQuestion = {
+    id: `custom-${Date.now()}`,
+    question,
+    options,
+    correctAnswer,
+    explanation: explanation || 'सामान्य स्पष्टीकरण.',
+    difficulty: 'मध्यम',
+    category
+  };
+
+  state.storage.customQuestions[category].push(customQuestion);
+  saveStorageData();
+
+  state.currentCategory = category;
+  state.currentIndex = getQuestionSet(category).length - 1;
+
+  event.target.reset();
+  renderCategoryButtons();
+  renderQuestionUI();
+  renderStats();
+  alert('तुमचा प्रश्न जतन झाला.');
+}
+
+function setupNavigation() {
+  document.getElementById('prevBtn').addEventListener('click', () => {
+    if (state.currentIndex > 0) {
+      state.currentIndex -= 1;
+      renderQuestionUI();
+    }
+  });
+
+  document.getElementById('nextBtn').addEventListener('click', () => {
+    const total = getQuestionSet(state.currentCategory).length;
+    if (state.currentIndex < total - 1) {
+      state.currentIndex += 1;
+      renderQuestionUI();
+    } else {
+      state.currentIndex = 0;
+      renderQuestionUI();
+    }
+  });
+
+  document.getElementById('showAnswerBtn').addEventListener('click', showAnswer);
+  document.getElementById('bookmarkBtn').addEventListener('click', toggleBookmark);
+  document.getElementById('resetProgressBtn').addEventListener('click', resetProgress);
+  document.getElementById('customQuestionForm').addEventListener('submit', handleCustomQuestionSubmit);
+}
+
+function init() {
+  updateDailyStreak();
+  renderCategoryButtons();
+  renderStats();
+  renderQuestionUI();
+  renderFormulaCards();
+  renderNewsCards();
+  setupNavigation();
+}
+
+document.addEventListener('DOMContentLoaded', init);
+
+window.addEventListener('beforeunload', () => {
+  saveStorageData();
+});
+
+window.mpscStudyData = state.storage;
+

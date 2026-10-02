@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="mr">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>MPSC परीक्षा हब | 5000+ प्रश्न बँक</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <nav class="navbar">
+      <div class="container nav-inner">
+        <div class="brand">📚 MPSC परीक्षा हब</div>
+        <ul class="nav-menu">
+          <li><a href="#practice">प्रश्न बँक</a></li>
+          <li><a href="#formulas">सूत्र</a></li>
+          <li><a href="#news">बातमी</a></li>
+          <li><a href="#admin">प्रश्न जोडणे</a></li>
+        </ul>
+      </div>
+    </nav>
+
+    <header class="hero">
+      <div class="container hero-content">
+        <p class="eyebrow">दैनिक अभ्यास | 7500+ प्रश्न</p>
+        <h1>मराठी MPSC आणि स्पर्धा परीक्षा तयारी</h1>
+        <p>
+          सामान्य ज्ञान, इतिहास, विज्ञान, बुद्धिमत्ता, गणित, सूत्र, नोट्स आणि
+          साप्ताहिक अपडेटसह पूर्ण तयारी.
+        </p>
+        <button class="btn primary-btn" onclick="document.getElementById('practice').scrollIntoView({behavior:'smooth'})">
+          आजचे अभ्यास सुरु करा
+        </button>
+      </div>
+    </header>
+
+    <main>
+      <section id="practice" class="section">
+        <div class="container">
+          <div class="section-title-row">
+            <h2>📝 प्रश्न बँक</h2>
+            <span class="badge" id="totalCount">0 प्रश्न</span>
+          </div>
+
+          <div class="stats-grid">
+            <div class="stat-card">
+              <span>आजची गुण</span>
+              <strong id="scoreStat">0</strong>
+            </div>
+            <div class="stat-card">
+              <span>उत्तरे</span>
+              <strong id="correctStat">0</strong>
+            </div>
+            <div class="stat-card">
+              <span>स्ट्रिक</span>
+              <strong id="streakStat">0</strong>
+            </div>
+            <div class="stat-card">
+              <span>बुकमार्क</span>
+              <strong id="bookmarkStat">0</strong>
+            </div>
+          </div>
+
+          <div class="category-tabs" id="categoryTabs"></div>
+
+          <div class="question-panel">
+            <div class="question-head">
+              <span id="questionMeta">प्रश्न 1 / 1</span>
+              <span class="difficulty" id="difficultyBadge">सोपे</span>
+            </div>
+
+            <div id="questionCard" class="question-card"></div>
+
+            <div class="question-actions">
+              <button class="btn secondary-btn" id="prevBtn">⬅ मागील</button>
+              <button class="btn secondary-btn" id="bookmarkBtn">☆ बुकमार्क</button>
+              <button class="btn secondary-btn" id="showAnswerBtn">उत्तर दाखवा</button>
+              <button class="btn danger-btn" id="resetProgressBtn">प्रगती साफ करा</button>
+              <button class="btn secondary-btn" id="nextBtn">पुढील ➡</button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="formulas" class="section alt-bg">
+        <div class="container">
+          <div class="section-title-row">
+            <h2>📐 गणिताचे महत्त्वाचे सूत्र</h2>
+          </div>
+          <div id="formulaCards" class="formula-grid"></div>
+        </div>
+      </section>
+
+      <section id="news" class="section">
+        <div class="container">
+          <div class="section-title-row">
+            <h2>📰 स्पर्धा परीक्षेची बातमी</h2>
+          </div>
+          <div id="newsCards" class="news-grid"></div>
+        </div>
+      </section>
+
+      <section id="admin" class="section alt-bg">
+        <div class="container">
+          <div class="section-title-row">
+            <h2>✍️ स्वतःचे प्रश्न जोडणे</h2>
+          </div>
+
+          <form id="customQuestionForm" class="admin-form">
+            <div class="form-grid">
+              <label>
+                विषय
+                <select id="customCategory">
+                  <option value="general">सामान्य</option>
+                  <option value="history">इतिहास</option>
+                  <option value="science">विज्ञान</option>
+                  <option value="reasoning">बुद्धिमत्ता</option>
+                  <option value="maths">गणित</option>
+                </select>
+              </label>
+
+              <label>
+                प्रश्न
+                <input type="text" id="customQuestion" placeholder="प्रश्न लिहा" required />
+              </label>
+
+              <label>
+                पर्याय A
+                <input type="text" id="customOptionA" placeholder="पर्याय A" required />
+              </label>
+
+              <label>
+                पर्याय B
+                <input type="text" id="customOptionB" placeholder="पर्याय B" required />
+              </label>
+
+              <label>
+                पर्याय C
+                <input type="text" id="customOptionC" placeholder="पर्याय C" required />
+              </label>
+
+              <label>
+                पर्याय D
+                <input type="text" id="customOptionD" placeholder="पर्याय D" required />
+              </label>
+
+              <label>
+                योग्य उत्तर
+                <select id="customCorrectAnswer">
+                  <option value="0">A</option>
+                  <option value="1">B</option>
+                  <option value="2">C</option>
+                  <option value="3">D</option>
+                </select>
+              </label>
+
+              <label>
+                स्पष्टीकरण
+                <textarea id="customExplanation" rows="3" placeholder="उत्तराची माहिती लिहा"></textarea>
+              </label>
+            </div>
+
+            <button class="btn primary-btn" type="submit">प्रश्न जतन करा</button>
+          </form>
+        </div>
+      </section>
+
+      <section id="about" class="section">
+        <div class="container info-grid">
+          <div class="info-box">
+            <h3>🎯 उद्देश</h3>
+            <p>
+              मराठीत सोप्या पद्धतीने, गरजेनुसार प्रश्न, सूत्र आणि उदाहरणे यांची
+              पुनरावृत्ती करून लक्ष केंद्रित करणे.
+            </p>
+          </div>
+
+          <div class="info-box">
+            <h3>✅ फायदें</h3>
+            <p>
+              बुकमार्क, प्रगती, स्ट्रिक आणि स्वयंरित्या संग्रहित प्रश्न यामुळे
+              विद्यार्थी अधिक वेळ देऊ शकतो आणि अभ्यास अधिक प्रभावी होतो.
+            </p>
+          </div>
+
+          <div class="info-box">
+            <h3>📘 वापर</h3>
+            <p>
+              दररोज काही प्रश्न सोडवा, गणिताचे सूत्र पाहा आणि स्वतःचे प्रश्न जोडून
+              आपले प्रॅक्टिस सेट बनवा.
+            </p>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <footer class="footer">
+      <div class="container footer-inner">
+        <p>© 2026 MPSC परीक्षा हब | सर्व हक्क सुरक्षित</p>
+        <p>दैनिक नविन प्रश्न, सूत्र आणि समजावणी</p>
+      </div>
+    </footer>
+
+    <script src="data.js"></script>
+    <script src="app.js"></script>
+  </body>
+</html>
