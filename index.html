@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="mr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MPSC परीक्षा हब - दैनिक अभ्यास</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <nav class="navbar">
+        <div class="container">
+            <h1 class="logo">📚 MPSC परीक्षा हब</h1>
+            <ul class="nav-menu">
+                <li><a href="#today-question" class="nav-link">आजचे प्रश्न</a></li>
+                <li><a href="#formulas" class="nav-link">सूत्र</a></li>
+                <li><a href="#news" class="nav-link">बातमी</a></li>
+                <li><a href="#about" class="nav-link">माहिती</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <header class="hero">
+        <div class="hero-content">
+            <h1>MPSC आणि स्पर्धा परीक्षा अभ्यास</h1>
+            <p>प्रतिदिन नविन प्रश्न, सूत्र आणि बातमी</p>
+            <button class="btn btn-primary" onclick="document.getElementById('today-question').scrollIntoView({behavior: 'smooth'})">सुरुवात करा</button>
+        </div>
+    </header>
+
+    <main class="container">
+        <!-- आजचे प्रश्न -->
+        <section id="today-question" class="section">
+            <h2>📝 आजचे प्रश्न</h2>
+            <div class="questions-container" id="questionsList">
+                <!-- JavaScript मधून लोड होईल -->
+            </div>
+        </section>
+
+        <!-- सूत्र -->
+        <section id="formulas" class="section">
+            <h2>📐 गणिताचे सूत्र</h2>
+            <div class="formulas-grid" id="formulasList">
+                <!-- JavaScript मधून लोड होईल -->
+            </div>
+        </section>
+
+        <!-- बातमी -->
+        <section id="news" class="section">
+            <h2>📰 स्पर्धा परीक्षेची बातमी</h2>
+            <div class="news-container" id="newsList">
+                <!-- JavaScript मधून लोड होईल -->
+            </div>
+        </section>
+
+        <!-- राजकीय अर्थव्यवस्था -->
+        <section id="polity" class="section">
+            <h2>🏛️ राजकीय अर्थव्यवस्था</h2>
+            <div class="polity-container" id="polityList">
+                <!-- JavaScript मधून लोड होईल -->
+            </div>
+        </section>
+
+        <!-- इतिहास -->
+        <section id="history" class="section">
+            <h2>📜 इतिहास</h2>
+            <div class="history-container" id="historyList">
+                <!-- JavaScript मधून लोड होईल -->
+            </div>
+        </section>
+
+        <!-- भूगोल -->
+        <section id="geography" class="section">
+            <h2>🌍 भूगोल</h2>
+            <div class="geography-container" id="geographyList">
+                <!-- JavaScript मधून लोड होईल -->
+            </div>
+        </section>
+    </main>
+
+    <footer class="footer">
+        <div class="container">
+            <p>&copy; 2024 MPSC परीक्षा हब | सर्व अधिकार सुरक्षित</p>
+            <p>दैनिक अधिकार बातमी आणि प्रश्न अपडेट होतात</p>
+        </div>
+    </footer>
+
+    <script src="data.js"></script>
+    <script src="app.js"></script>
+</body>
+</html>

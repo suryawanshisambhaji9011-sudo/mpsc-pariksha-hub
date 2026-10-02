@@ -1,0 +1,13 @@
+{
+  "name": "mpsc-pariksha-hub",
+  "version": "1.0.0",
+  "description": "Marathi MPSC आणि स्पर्धा परीक्षा दैनिक अभ्यास",
+  "main": "index.js",
+  "scripts": {
+    "start": "python -m http.server 8000",
+    "dev": "python -m http.server 3000"
+  },
+  "keywords": ["MPSC", "Marathi", "Exam Prep", "Daily Questions"],
+  "author": "MPSC Hub",
+  "license": "MIT"
+}
